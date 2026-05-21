@@ -1,6 +1,6 @@
 const DICT = {
   zh: {
-    heroTitle: '图片进来，文字出去。\n图像不离开浏览器。',
+    heroTitle: '图片进来，文字出去。图像不离开浏览器。',
     heroDesc:
       '现在改用 PP-OCRv5 mobile ONNX，在浏览器内完成检测和识别。Cloudflare 只负责静态托管、全球缓存和分发模型资产，不接触用户上传的图片。',
     heroPill1: '隐私优先',
@@ -62,7 +62,7 @@ const DICT = {
     wasmFallback: 'WASM fallback',
   },
   en: {
-    heroTitle: 'Image in, text out.\nImages never leave your browser.',
+    heroTitle: 'Image in, text out. Images never leave your browser.',
     heroDesc:
       'Now powered by PP-OCRv5 mobile ONNX, detection and recognition run entirely in your browser. Cloudflare only handles static hosting, global caching and model asset delivery — it never sees the images you upload.',
     heroPill1: 'Privacy-first',
