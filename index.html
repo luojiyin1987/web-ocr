@@ -72,45 +72,51 @@
     <noscript>
       <div style="max-width: 600px; margin: 40px auto; padding: 24px; font-family: system-ui, sans-serif; line-height: 1.6; color: #18261f;">
         <h1>Glass OCR</h1>
-        <p><strong>隐私优先的浏览器端 OCR 工具。</strong></p>
-        <p>图片不上传服务器，文字提取直接在用户浏览器里完成。支持 PP-OCRv5 mobile ONNX 模型，兼容 WebGPU 与 WASM 后端。</p>
-        <p>⚠️ 本工具需要启用 JavaScript 才能运行 OCR 推理。请开启浏览器的 JavaScript 支持后刷新页面。</p>
+        <p><strong data-i18n="noscriptStrong">隐私优先的浏览器端 OCR 工具。</strong></p>
+        <p data-i18n="noscriptBody">图片不上传服务器，文字提取直接在用户浏览器里完成。支持 PP-OCRv5 mobile ONNX 模型，兼容 WebGPU 与 WASM 后端。</p>
+        <p data-i18n="noscriptWarning">⚠️ 本工具需要启用 JavaScript 才能运行 OCR 推理。请开启浏览器的 JavaScript 支持后刷新页面。</p>
       </div>
     </noscript>
 
     <div class="page-shell">
       <header class="hero">
         <div class="hero-copy">
+          <div class="lang-bar">
+            <span class="lang-label" data-i18n="langSwitch">语言</span>
+            <button class="lang-btn" data-lang="zh" type="button">中文</button>
+            <span class="lang-divider">|</span>
+            <button class="lang-btn" data-lang="en" type="button">EN</button>
+          </div>
           <p class="eyebrow">Cloudflare Pages + PaddleOCR.js</p>
-          <h1>图片进来，文字出去。<br />图像不离开浏览器。</h1>
-          <p class="hero-text">
+          <h1 data-i18n="heroTitle" data-i18n-html>图片进来，文字出去。<br />图像不离开浏览器。</h1>
+          <p class="hero-text" data-i18n="heroDesc">
             现在改用 PP-OCRv5 mobile ONNX，在浏览器内完成检测和识别。Cloudflare 只负责静态托管、全球缓存和分发模型资产，不接触用户上传的图片。
           </p>
           <div class="hero-pills">
-            <span>隐私优先</span>
+            <span data-i18n="heroPill1">隐私优先</span>
             <span>PP-OCRv5 mobile</span>
-            <span>Cloudflare 全球分发</span>
+            <span data-i18n="heroPill3">Cloudflare 全球分发</span>
           </div>
         </div>
 
         <div class="hero-status panel">
-          <p class="panel-label">Runtime</p>
+          <p class="panel-label" data-i18n="runtimeLabel">Runtime</p>
           <dl class="status-grid">
             <div>
-              <dt>当前引擎</dt>
+              <dt data-i18n="engineLabel">当前引擎</dt>
               <dd id="engine-status">PP-OCRv5 mobile / ONNX</dd>
             </div>
             <div>
-              <dt>后端偏好</dt>
+              <dt data-i18n="backendLabel">后端偏好</dt>
               <dd id="backend-status">auto</dd>
             </div>
             <div>
-              <dt>实际 Provider</dt>
-              <dd id="provider-status">未初始化</dd>
+              <dt data-i18n="providerLabel">实际 Provider</dt>
+              <dd id="provider-status" data-i18n="uninitialized">未初始化</dd>
             </div>
             <div>
-              <dt>模型来源</dt>
-              <dd>同源 ONNX tar</dd>
+              <dt data-i18n="modelSourceLabel">模型来源</dt>
+              <dd data-i18n="selfHostedOnnx">同源 ONNX tar</dd>
             </div>
           </dl>
         </div>
@@ -120,21 +126,21 @@
         <section class="panel control-panel">
           <div class="section-head">
             <div>
-              <p class="panel-label">Step 1</p>
-              <h2>上传图片</h2>
+              <p class="panel-label" data-i18n="step1Label">Step 1</p>
+              <h2 data-i18n="uploadImage">上传图片</h2>
             </div>
-            <button class="ghost-button" id="clear-image-button" type="button">清空</button>
+            <button class="ghost-button" id="clear-image-button" type="button" data-i18n="clear">清空</button>
           </div>
 
           <label class="dropzone" for="image-input" id="dropzone">
             <input id="image-input" type="file" accept="image/*" hidden />
-            <span class="dropzone-title">拖拽图片到这里</span>
-            <span class="dropzone-subtitle">或点击选择 PNG / JPG / WEBP / GIF</span>
+            <span class="dropzone-title" data-i18n="dropzoneTitle">拖拽图片到这里</span>
+            <span class="dropzone-subtitle" data-i18n="dropzoneSubtitle">或点击选择 PNG / JPG / WEBP / GIF</span>
           </label>
 
           <div class="toolbar">
             <label class="field">
-              <span>推理后端</span>
+              <span data-i18n="backendSelectLabel">推理后端</span>
               <select id="backend-select">
                 <option value="auto">Auto (Recommended)</option>
                 <option value="webgpu">WebGPU First</option>
@@ -144,23 +150,23 @@
 
             <label class="field checkbox-field">
               <input id="show-boxes-toggle" type="checkbox" checked />
-              <span>显示检测框</span>
+              <span data-i18n="showBoxesLabel">显示检测框</span>
             </label>
           </div>
 
           <div class="toolbar action-toolbar">
-            <button class="primary-button" id="run-ocr-button" type="button" disabled>
+            <button class="primary-button" id="run-ocr-button" type="button" disabled data-i18n="startOcr">
               开始 OCR
             </button>
-            <button class="ghost-button" id="copy-text-button" type="button" disabled>复制文本</button>
-            <button class="ghost-button" id="download-text-button" type="button" disabled>
+            <button class="ghost-button" id="copy-text-button" type="button" disabled data-i18n="copyText">复制文本</button>
+            <button class="ghost-button" id="download-text-button" type="button" disabled data-i18n="downloadTxt">
               下载 TXT
             </button>
           </div>
 
           <div class="progress-card">
             <div class="progress-meta">
-              <span id="progress-label">等待图片</span>
+              <span id="progress-label" data-i18n="progressLabelWaitImage">等待图片</span>
               <span id="progress-percent">0%</span>
             </div>
             <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="OCR 处理进度" id="progress-track">
@@ -168,7 +174,7 @@
             </div>
           </div>
 
-          <p class="privacy-note">
+          <p class="privacy-note" data-i18n="privacyNote">
             图片仅在当前浏览器会话内处理。Cloudflare Pages 负责托管页面、ONNX Runtime 资产和 PP-OCRv5 模型，不接收你上传的图片内容。
           </p>
         </section>
@@ -176,29 +182,29 @@
         <section class="panel preview-panel">
           <div class="section-head">
             <div>
-              <p class="panel-label">Step 2</p>
-              <h2>图像预览</h2>
+              <p class="panel-label" data-i18n="step2Label">Step 2</p>
+              <h2 data-i18n="imagePreview">图像预览</h2>
             </div>
-            <p class="mini-note" id="image-meta">尚未选择图片</p>
+            <p class="mini-note" id="image-meta" data-i18n="noImageSelected">尚未选择图片</p>
           </div>
 
           <div class="preview-frame empty" id="preview-frame">
             <img id="preview-image" alt="OCR 预览图" draggable="false" />
             <svg id="boxes-layer" aria-hidden="true"></svg>
-            <p class="preview-placeholder" id="preview-placeholder">上传后会在这里展示识别区域</p>
+            <p class="preview-placeholder" id="preview-placeholder" data-i18n="previewPlaceholder">上传后会在这里展示识别区域</p>
           </div>
         </section>
 
         <section class="panel result-panel">
           <div class="section-head">
             <div>
-              <p class="panel-label">Step 3</p>
-              <h2 id="result-heading">提取结果</h2>
+              <p class="panel-label" data-i18n="step3Label">Step 3</p>
+              <h2 id="result-heading" data-i18n="extractResult">提取结果</h2>
             </div>
             <div class="result-stats" id="result-stats">
-              <span>耗时: --</span>
-              <span>平均分: --</span>
-              <span>文本行: --</span>
+              <span data-i18n="resultDuration">耗时: --</span>
+              <span data-i18n="resultScore">平均分: --</span>
+              <span data-i18n="resultLines">文本行: --</span>
             </div>
           </div>
 
@@ -207,6 +213,8 @@
             spellcheck="false"
             placeholder="OCR 结果会出现在这里"
             aria-labelledby="result-heading"
+            data-i18n="placeholderResult"
+            data-i18n-placeholder
           ></textarea>
         </section>
       </main>
