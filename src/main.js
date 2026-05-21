@@ -245,6 +245,7 @@ function buildOrtOptions() {
     backend: elements.backendSelect.value,
     numThreads: Math.max(1, Math.min(4, navigator.hardwareConcurrency || 2)),
     simd: true,
+    wasmPaths: 'https://unpkg.com/onnxruntime-web@1.26.0/dist/',
   };
 }
 

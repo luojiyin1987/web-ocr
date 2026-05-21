@@ -8,6 +8,7 @@
 - OCR：官方 `@paddleocr/paddleocr-js`
 - 模型：`PP-OCRv5_mobile_det` + `PP-OCRv5_mobile_rec`
 - 推理：ONNX Runtime Web，优先 `WebGPU`，回退 `WASM`
+- ONNX Runtime WASM：通过 unpkg CDN 加载（版本锁定）
 - 模型资产：自托管官方 ONNX tar
 - 托管：Cloudflare Pages
 
@@ -18,7 +19,7 @@ npm install
 npm run dev
 ```
 
-默认会先执行资源准备脚本，下载官方 PP-OCRv5 mobile ONNX tar 到 `public/`。ONNX Runtime 的 wasm 资源由 Vite 在构建时打包到同源 `dist/assets/`。
+默认会先执行资源准备脚本，下载官方 PP-OCRv5 mobile ONNX tar 到 `public/`。ONNX Runtime 的 wasm 资源在运行时通过 unpkg CDN 加载，版本已锁定，不再由 Vite 打包到 `dist/assets/`。
 
 不要直接双击打开 `index.html` 或 `dist/index.html`。PaddleOCR.js、ONNX Runtime 和模型 tar 必须通过 HTTP 提供，否则浏览器会直接拦截或把资源当下载处理。
 
@@ -51,6 +52,14 @@ npx wrangler pages deploy dist
 - OCR 在浏览器中运行，图片不上传到你的应用服务端。
 - `public/_headers` 为模型 tar 设置了长缓存，适合 Cloudflare 全球边缘缓存。
 - 头部里启用了 `Cross-Origin-Opener-Policy` 和 `Cross-Origin-Embedder-Policy`，为线程化 WASM 与 WebGPU 运行条件做准备。
+
+## 外部 CDN 风险与注意事项
+
+ONNX Runtime Web 的 `.wasm` 文件在运行时通过 `unpkg.com` 加载，需关注以下风险：
+
+1. **CDN 可用性依赖**：如果用户网络无法访问 `unpkg.com`（或被墙），WASM 会加载失败，导致 OCR 无法初始化。如需更高可用性，建议再配置一条 jsDelivr 的 fallback URL。
+2. **版本锁定**：当前锁定版本为 `onnxruntime-web@1.26.0`，不会自动跟随最新版。后续升级 `@paddleocr/paddleocr-js` 时，应检查其依赖的 `onnxruntime-web` 版本，并同步更新 `wasmPaths` 中的版本号。
+3. **CORP 兼容性**：`public/_headers` 设置了 `Cross-Origin-Embedder-Policy: require-corp`。经验证，`unpkg.com` 的响应头已携带 `Cross-Origin-Resource-Policy: cross-origin`，浏览器不会拦截跨域 WASM 加载。
 
 ## 当前 MVP 功能
 
