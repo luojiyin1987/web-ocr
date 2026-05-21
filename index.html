@@ -6,10 +6,72 @@
     <title>Glass OCR</title>
     <meta
       name="description"
-      content="隐私优先的浏览器端 OCR。图片不上传服务器，文字提取直接在用户浏览器里完成。"
+      content="隐私优先的浏览器端 OCR 工具。图片不上传服务器，文字提取直接在用户浏览器里完成。支持 PP-OCRv5、WebGPU 与 WASM 后端。"
     />
+    <meta name="keywords" content="OCR, 文字识别, 图片转文字, 隐私优先, PaddleOCR, 浏览器端 OCR, 在线 OCR" />
+    <meta name="author" content="luojiyin1987" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Glass OCR — 隐私优先的浏览器端 OCR" />
+    <meta
+      property="og:description"
+      content="图片不上传服务器，文字提取直接在用户浏览器里完成。支持 PP-OCRv5、WebGPU 与 WASM 后端。"
+    />
+    <meta property="og:locale" content="zh_CN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Glass OCR — 隐私优先的浏览器端 OCR" />
+    <meta
+      name="twitter:description"
+      content="图片不上传服务器，文字提取直接在用户浏览器里完成。支持 PP-OCRv5、WebGPU 与 WASM 后端。"
+    />
+
+    <!-- Theme & Icons -->
+    <meta name="theme-color" content="#0d8b77" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔍%3C/text%3E%3C/svg%3E" />
+
+    <!-- Performance: preconnect to CDN used by runtime -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
+    <link rel="dns-prefetch" href="https://unpkg.com" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Glass OCR",
+        "description": "隐私优先的浏览器端 OCR 工具。图片不上传服务器，文字提取直接在用户浏览器里完成。",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "CNY"
+        },
+        "featureList": [
+          "浏览器端图片文字识别",
+          "图片不上传服务器",
+          "PP-OCRv5 mobile ONNX 模型",
+          "WebGPU / WASM 双后端",
+          "检测框可视化",
+          "文本复制与 TXT 下载"
+        ]
+      }
+    </script>
   </head>
   <body>
+    <noscript>
+      <div style="max-width: 600px; margin: 40px auto; padding: 24px; font-family: system-ui, sans-serif; line-height: 1.6; color: #18261f;">
+        <h1>Glass OCR</h1>
+        <p><strong>隐私优先的浏览器端 OCR 工具。</strong></p>
+        <p>图片不上传服务器，文字提取直接在用户浏览器里完成。支持 PP-OCRv5 mobile ONNX 模型，兼容 WebGPU 与 WASM 后端。</p>
+        <p>⚠️ 本工具需要启用 JavaScript 才能运行 OCR 推理。请开启浏览器的 JavaScript 支持后刷新页面。</p>
+      </div>
+    </noscript>
+
     <div class="page-shell">
       <header class="hero">
         <div class="hero-copy">
