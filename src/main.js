@@ -389,8 +389,12 @@ function detectRuntimeBlockers() {
 
 async function copyResult() {
   if (!state.lastText.trim()) return;
-  await navigator.clipboard.writeText(state.lastText);
-  setProgress(1, '已复制到剪贴板');
+  try {
+    await navigator.clipboard.writeText(state.lastText);
+    setProgress(1, '已复制到剪贴板');
+  } catch {
+    setProgress(1, '复制失败，请手动复制');
+  }
 }
 
 function downloadResult() {
@@ -402,8 +406,10 @@ function downloadResult() {
   const baseName = state.imageFile?.name?.replace(/\.[^.]+$/, '') ?? 'ocr-result';
   anchor.href = href;
   anchor.download = `${baseName}.txt`;
+  document.body.appendChild(anchor);
   anchor.click();
-  URL.revokeObjectURL(href);
+  document.body.removeChild(anchor);
+  setTimeout(() => URL.revokeObjectURL(href), 1000);
 }
 
 function handleFiles(fileList) {
@@ -448,6 +454,10 @@ function setupEvents() {
   elements.downloadTextButton.addEventListener('click', downloadResult);
   elements.showBoxesToggle.addEventListener('change', renderPolygons);
   elements.previewImage.addEventListener('load', renderPolygons);
+  elements.previewImage.addEventListener('error', () => {
+    clearImage();
+    setProgress(0, '图片加载失败，请尝试其他图片');
+  });
   elements.backendSelect.addEventListener('change', async () => {
     await disposeOcr();
     clearResultState();
@@ -457,7 +467,7 @@ function setupEvents() {
 
   window.addEventListener('beforeunload', () => {
     if (state.ocr) {
-      state.ocr.dispose();
+      state.ocr.dispose().catch(() => {});
     }
   });
 
