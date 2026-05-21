@@ -1,4 +1,5 @@
 import './style.css';
+import { t, initI18n, onLangChange, setLocale, getLocale } from './i18n.js';
 
 const PADDLE_MODEL_ASSETS = {
   det: {
@@ -89,7 +90,7 @@ function hasWebGpu() {
 }
 
 function formatBackendLabel(backend, webgpuAvailable = hasWebGpu()) {
-  const capability = webgpuAvailable ? 'WebGPU ready' : 'WASM fallback';
+  const capability = webgpuAvailable ? t('webgpuReady') : t('wasmFallback');
   return `${backend} · ${capability}`;
 }
 
@@ -110,7 +111,7 @@ function updateRuntimeCards(runtime = null) {
     return;
   }
 
-  elements.providerStatus.textContent = '未初始化';
+  elements.providerStatus.textContent = t('uninitialized');
 }
 
 function updateButtons() {
@@ -132,9 +133,9 @@ function updateStats() {
   const lineCount = state.lines.length > 0 ? String(state.lines.length) : '--';
 
   elements.resultStats.innerHTML = `
-    <span>耗时: ${duration}</span>
-    <span>平均分: ${averageScore}</span>
-    <span>文本行: ${lineCount}</span>
+    <span>${t('resultDuration')}: ${duration}</span>
+    <span>${t('resultScore')}: ${averageScore}</span>
+    <span>${t('resultLines')}: ${lineCount}</span>
   `;
 }
 
@@ -175,9 +176,9 @@ function clearImage() {
   elements.previewImage.removeAttribute('src');
   elements.previewFrame.classList.add('empty');
   elements.previewPlaceholder.hidden = false;
-  elements.imageMeta.textContent = '尚未选择图片';
+  elements.imageMeta.textContent = t('noImageSelected');
   clearResultState();
-  setProgress(0, state.runtimeBlockReason ? '请通过 HTTP 打开页面' : '等待图片');
+  setProgress(0, state.runtimeBlockReason ? t('openViaHttp') : t('waitingForImage'));
 }
 
 function getPolygonColor(score) {
@@ -301,7 +302,7 @@ async function setImage(file) {
   elements.previewPlaceholder.hidden = true;
   elements.imageMeta.textContent = `${processedFile.name} · ${(processedFile.size / 1024 / 1024).toFixed(2)} MB`;
   clearResultState();
-  setProgress(0, '图片已就绪');
+  setProgress(0, t('imageReady'));
   updateButtons();
 }
 
@@ -332,7 +333,7 @@ async function ensureOcr() {
 
   await disposeOcr();
 
-  setProgress(0.08, '创建 PaddleOCR.js 实例');
+  setProgress(0.08, t('creatingPaddleOcr'));
   const PaddleOCR = await getPaddleOCRClass();
   const instance = await PaddleOCR.create({
     initialize: false,
@@ -343,7 +344,7 @@ async function ensureOcr() {
     ortOptions: buildOrtOptions(),
   });
 
-  setProgress(0.24, '初始化 ONNX Runtime');
+  setProgress(0.24, t('initializingOnnx'));
   const summary = await instance.initialize();
 
   state.ocr = instance;
@@ -384,7 +385,7 @@ async function runOcr() {
 
   try {
     const ocr = await ensureOcr();
-    setProgress(0.62, '执行文字检测与识别');
+    setProgress(0.62, t('runningOcr'));
 
     const [result] = await ocr.predict(state.imageFile, {
       textDetLimitType: 'min',
@@ -401,17 +402,17 @@ async function runOcr() {
     renderPolygons();
     updateStats();
     if (!state.lastText.trim()) {
-      setProgress(1, '未识别到文字');
+      setProgress(1, t('noTextDetected'));
       return;
     }
     setProgress(
       1,
-      `完成 · 全图 · ${result?.runtime?.detProvider ?? 'unknown'} / ${result?.runtime?.recProvider ?? 'unknown'}`,
+      t('completedPattern', result?.runtime?.detProvider ?? 'unknown', result?.runtime?.recProvider ?? 'unknown'),
     );
   } catch (error) {
     console.error(error);
-    setProgress(0, 'OCR 失败，请重试');
-    elements.resultText.value = `OCR 失败：${error instanceof Error ? error.message : String(error)}`;
+    setProgress(0, t('ocrFailed'));
+    elements.resultText.value = t('ocrFailedWithReason', error instanceof Error ? error.message : String(error));
     state.lastText = '';
     state.lines = [];
     state.lastAverageScore = null;
@@ -426,10 +427,9 @@ async function runOcr() {
 
 function detectRuntimeBlockers() {
   if (window.location.protocol === 'file:') {
-    state.runtimeBlockReason =
-      '当前页面是通过 file:// 直接打开的。PaddleOCR.js、ONNX Runtime 和模型 tar 需要通过 HTTP 服务加载，请改用 npm run dev 或 Cloudflare Pages 访问。';
+    state.runtimeBlockReason = t('fileProtocolWarning');
     elements.resultText.value = state.runtimeBlockReason;
-    setProgress(0, '请通过 HTTP 打开页面');
+    setProgress(0, t('openViaHttp'));
   }
 }
 
@@ -437,9 +437,9 @@ async function copyResult() {
   if (!state.lastText.trim()) return;
   try {
     await navigator.clipboard.writeText(state.lastText);
-    setProgress(1, '已复制到剪贴板');
+    setProgress(1, t('copied'));
   } catch {
-    setProgress(1, '复制失败，请手动复制');
+    setProgress(1, t('copyFailed'));
   }
 }
 
@@ -502,12 +502,12 @@ function setupEvents() {
   elements.previewImage.addEventListener('load', renderPolygons);
   elements.previewImage.addEventListener('error', () => {
     clearImage();
-    setProgress(0, '图片加载失败，请尝试其他图片');
+    setProgress(0, t('imageLoadFailed'));
   });
   elements.backendSelect.addEventListener('change', async () => {
     await disposeOcr();
     clearResultState();
-    setProgress(0, '后端已切换，下一次识别会重新初始化');
+    setProgress(0, t('backendSwitched'));
     updateRuntimeCards();
   });
 
@@ -532,9 +532,38 @@ updateRuntimeCards();
 updateStats();
 updateButtons();
 if (!state.runtimeBlockReason) {
-  setProgress(0, '等待图片');
+  setProgress(0, t('waitingForImage'));
 }
 
 probeWebGpu().then(() => {
   updateRuntimeCards();
+});
+
+// Language switcher
+document.querySelectorAll('.lang-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const lang = btn.dataset.lang;
+    if (lang) setLocale(lang);
+  });
+});
+
+function syncLangButtonState() {
+  document.querySelectorAll('.lang-btn').forEach((btn) => {
+    btn.setAttribute('aria-pressed', btn.dataset.lang === getLocale() ? 'true' : 'false');
+  });
+}
+
+syncLangButtonState();
+
+onLangChange(() => {
+  syncLangButtonState();
+  updateRuntimeCards();
+  updateStats();
+  if (!state.isRunning && !state.imageFile && !state.runtimeBlockReason) {
+    setProgress(0, t('waitingForImage'));
+  }
+  if (state.runtimeBlockReason) {
+    setProgress(0, t('openViaHttp'));
+    elements.resultText.value = state.runtimeBlockReason;
+  }
 });
