@@ -95,7 +95,7 @@
               <span id="progress-label">等待图片</span>
               <span id="progress-percent">0%</span>
             </div>
-            <div class="progress-track">
+            <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="OCR 处理进度" id="progress-track">
               <div class="progress-bar" id="progress-bar"></div>
             </div>
           </div>
@@ -125,7 +125,7 @@
           <div class="section-head">
             <div>
               <p class="panel-label">Step 3</p>
-              <h2>提取结果</h2>
+              <h2 id="result-heading">提取结果</h2>
             </div>
             <div class="result-stats" id="result-stats">
               <span>耗时: --</span>
@@ -138,6 +138,7 @@
             id="result-text"
             spellcheck="false"
             placeholder="OCR 结果会出现在这里"
+            aria-labelledby="result-heading"
           ></textarea>
         </section>
       </main>

@@ -26,6 +26,7 @@ const elements = {
   progressLabel: document.querySelector('#progress-label'),
   progressPercent: document.querySelector('#progress-percent'),
   progressBar: document.querySelector('#progress-bar'),
+  progressTrack: document.querySelector('#progress-track'),
   imageMeta: document.querySelector('#image-meta'),
   previewFrame: document.querySelector('#preview-frame'),
   previewImage: document.querySelector('#preview-image'),
@@ -61,9 +62,13 @@ const resizeObserver =
 
 function setProgress(progress, label) {
   const clamped = Math.max(0, Math.min(progress, 1));
-  elements.progressBar.style.width = `${Math.round(clamped * 100)}%`;
-  elements.progressPercent.textContent = `${Math.round(clamped * 100)}%`;
+  const percent = Math.round(clamped * 100);
+  elements.progressBar.style.width = `${percent}%`;
+  elements.progressPercent.textContent = `${percent}%`;
   elements.progressLabel.textContent = label;
+  if (elements.progressTrack) {
+    elements.progressTrack.setAttribute('aria-valuenow', percent);
+  }
 }
 
 async function probeWebGpu() {
