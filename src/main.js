@@ -246,14 +246,60 @@ function renderPolygons() {
   elements.boxesLayer.appendChild(fragment);
 }
 
-function setImage(file) {
+async function compressImage(file, maxSide = 1920, quality = 0.85) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(img.src);
+      const { naturalWidth: w, naturalHeight: h } = img;
+      if (w <= maxSide && h <= maxSide) {
+        resolve(file);
+        return;
+      }
+      const scale = maxSide / Math.max(w, h);
+      const cw = Math.round(w * scale);
+      const ch = Math.round(h * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = cw;
+      canvas.height = ch;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, cw, ch);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            reject(new Error('Canvas toBlob failed'));
+            return;
+          }
+          resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: file.lastModified }));
+        },
+        'image/jpeg',
+        quality,
+      );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(img.src);
+      reject(new Error('Image load failed for compression'));
+    };
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+async function setImage(file) {
   revokeImageUrl();
-  state.imageFile = file;
-  state.imageUrl = URL.createObjectURL(file);
+
+  let processedFile = file;
+  try {
+    processedFile = await compressImage(file);
+  } catch {
+    // 压缩失败时回退到原图
+  }
+
+  state.imageFile = processedFile;
+  state.imageUrl = URL.createObjectURL(processedFile);
   elements.previewImage.src = state.imageUrl;
   elements.previewFrame.classList.remove('empty');
   elements.previewPlaceholder.hidden = true;
-  elements.imageMeta.textContent = `${file.name} · ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+  elements.imageMeta.textContent = `${processedFile.name} · ${(processedFile.size / 1024 / 1024).toFixed(2)} MB`;
   clearResultState();
   setProgress(0, '图片已就绪');
   updateButtons();
@@ -412,13 +458,13 @@ function downloadResult() {
   setTimeout(() => URL.revokeObjectURL(href), 1000);
 }
 
-function handleFiles(fileList) {
+async function handleFiles(fileList) {
   const [file] = [...fileList].filter((item) => item.type.startsWith('image/'));
   if (!file) {
     return;
   }
 
-  setImage(file);
+  await setImage(file);
 }
 
 function setupDragAndDrop() {
