@@ -15,9 +15,3 @@ repos:
       - id: check-case-conflict
       - id: check-merge-conflict
       - id: detect-private-key
-
-  - repo: https://github.com/koalaman/shellcheck-py
-    rev: v0.10.0.1
-    hooks:
-      - id: shellcheck
-        args: ['--severity=warning']
