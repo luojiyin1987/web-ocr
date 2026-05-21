@@ -1,0 +1,32 @@
+{
+  "name": "web-ocr",
+  "version": "1.0.0",
+  "description": "Privacy-first browser OCR on Cloudflare Pages",
+  "scripts": {
+    "prepare:assets": "node scripts/prepare-assets.mjs",
+    "check:assets": "node scripts/prepare-assets.mjs --check",
+    "predev": "npm run prepare:assets",
+    "dev": "vite",
+    "prebuild": "npm run prepare:assets",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "./scripts/smoke-prepare-assets.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luojiyin1987/web-ocr.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luojiyin1987/web-ocr/issues"
+  },
+  "homepage": "https://github.com/luojiyin1987/web-ocr#readme",
+  "devDependencies": {
+    "vite": "^8.0.13"
+  },
+  "dependencies": {
+    "@paddleocr/paddleocr-js": "^0.3.2"
+  }
+}

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glass OCR</title>
+    <meta
+      name="description"
+      content="隐私优先的浏览器端 OCR。图片不上传服务器，文字提取直接在用户浏览器里完成。"
+    />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Cloudflare Pages + PaddleOCR.js</p>
+          <h1>图片进来，文字出去。<br />图像不离开浏览器。</h1>
+          <p class="hero-text">
+            现在改用 PP-OCRv5 mobile ONNX，在浏览器内完成检测和识别。Cloudflare 只负责静态托管、全球缓存和分发模型资产，不接触用户上传的图片。
+          </p>
+          <div class="hero-pills">
+            <span>隐私优先</span>
+            <span>PP-OCRv5 mobile</span>
+            <span>Cloudflare 全球分发</span>
+          </div>
+        </div>
+
+        <div class="hero-status panel">
+          <p class="panel-label">Runtime</p>
+          <dl class="status-grid">
+            <div>
+              <dt>当前引擎</dt>
+              <dd id="engine-status">PP-OCRv5 mobile / ONNX</dd>
+            </div>
+            <div>
+              <dt>后端偏好</dt>
+              <dd id="backend-status">auto</dd>
+            </div>
+            <div>
+              <dt>实际 Provider</dt>
+              <dd id="provider-status">未初始化</dd>
+            </div>
+            <div>
+              <dt>模型来源</dt>
+              <dd>同源 ONNX tar</dd>
+            </div>
+          </dl>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="panel control-panel">
+          <div class="section-head">
+            <div>
+              <p class="panel-label">Step 1</p>
+              <h2>上传图片</h2>
+            </div>
+            <button class="ghost-button" id="clear-image-button" type="button">清空</button>
+          </div>
+
+          <label class="dropzone" for="image-input" id="dropzone">
+            <input id="image-input" type="file" accept="image/*" hidden />
+            <span class="dropzone-title">拖拽图片到这里</span>
+            <span class="dropzone-subtitle">或点击选择 PNG / JPG / WEBP / GIF</span>
+          </label>
+
+          <div class="toolbar">
+            <label class="field">
+              <span>推理后端</span>
+              <select id="backend-select">
+                <option value="auto">Auto (Recommended)</option>
+                <option value="webgpu">WebGPU First</option>
+                <option value="wasm">WASM Only</option>
+              </select>
+            </label>
+
+            <label class="field checkbox-field">
+              <input id="show-boxes-toggle" type="checkbox" checked />
+              <span>显示检测框</span>
+            </label>
+          </div>
+
+          <div class="toolbar action-toolbar">
+            <button class="primary-button" id="run-ocr-button" type="button" disabled>
+              开始 OCR
+            </button>
+            <button class="ghost-button" id="copy-text-button" type="button" disabled>复制文本</button>
+            <button class="ghost-button" id="download-text-button" type="button" disabled>
+              下载 TXT
+            </button>
+          </div>
+
+          <div class="progress-card">
+            <div class="progress-meta">
+              <span id="progress-label">等待图片</span>
+              <span id="progress-percent">0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-bar" id="progress-bar"></div>
+            </div>
+          </div>
+
+          <p class="privacy-note">
+            图片仅在当前浏览器会话内处理。Cloudflare Pages 负责托管页面、ONNX Runtime 资产和 PP-OCRv5 模型，不接收你上传的图片内容。
+          </p>
+        </section>
+
+        <section class="panel preview-panel">
+          <div class="section-head">
+            <div>
+              <p class="panel-label">Step 2</p>
+              <h2>图像预览</h2>
+            </div>
+            <p class="mini-note" id="image-meta">尚未选择图片</p>
+          </div>
+
+          <div class="preview-frame empty" id="preview-frame">
+            <img id="preview-image" alt="OCR 预览图" draggable="false" />
+            <svg id="boxes-layer" aria-hidden="true"></svg>
+            <p class="preview-placeholder" id="preview-placeholder">上传后会在这里展示识别区域</p>
+          </div>
+        </section>
+
+        <section class="panel result-panel">
+          <div class="section-head">
+            <div>
+              <p class="panel-label">Step 3</p>
+              <h2>提取结果</h2>
+            </div>
+            <div class="result-stats" id="result-stats">
+              <span>耗时: --</span>
+              <span>平均分: --</span>
+              <span>文本行: --</span>
+            </div>
+          </div>
+
+          <textarea
+            id="result-text"
+            spellcheck="false"
+            placeholder="OCR 结果会出现在这里"
+          ></textarea>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

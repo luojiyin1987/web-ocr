@@ -1,0 +1,4 @@
+{
+  "name": "web-ocr",
+  "pages_build_output_dir": "./dist"
+}
