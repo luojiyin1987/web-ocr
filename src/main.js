@@ -47,6 +47,7 @@ const state = {
   lastDurationMs: null,
   runtimeBlockReason: null,
   initializationSummary: null,
+  webgpuAvailable: null,
 };
 
 let paddleOcrModulePromise = null;
@@ -65,8 +66,21 @@ function setProgress(progress, label) {
   elements.progressLabel.textContent = label;
 }
 
+async function probeWebGpu() {
+  if (!('gpu' in navigator)) {
+    state.webgpuAvailable = false;
+    return;
+  }
+  try {
+    const adapter = await navigator.gpu.requestAdapter();
+    state.webgpuAvailable = !!adapter;
+  } catch {
+    state.webgpuAvailable = false;
+  }
+}
+
 function hasWebGpu() {
-  return 'gpu' in navigator;
+  return state.webgpuAvailable ?? ('gpu' in navigator);
 }
 
 function formatBackendLabel(backend, webgpuAvailable = hasWebGpu()) {
@@ -459,3 +473,7 @@ updateButtons();
 if (!state.runtimeBlockReason) {
   setProgress(0, '等待图片');
 }
+
+probeWebGpu().then(() => {
+  updateRuntimeCards();
+});
