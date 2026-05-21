@@ -1,0 +1,97 @@
+Glass OCR Third-Party Licenses
+==============================
+
+This application bundles or depends on the following open-source software.
+
+Runtime Dependencies (bundled into the application)
+---------------------------------------------------
+
+@paddleocr/paddleocr-js
+  License: Apache-2.0
+  Repository: https://github.com/PaddlePaddle/PaddleOCR/tree/main/paddleocr-js
+  Description: Browser-based OCR SDK powered by PaddleOCR
+
+@techstark/opencv-js
+  License: Apache-2.0
+  Repository: https://github.com/TechStark/opencv-js
+  Description: OpenCV JavaScript bindings used internally by PaddleOCR.js
+
+onnxruntime-web / onnxruntime-common
+  License: MIT
+  Repository: https://github.com/microsoft/onnxruntime
+  Description: ONNX Runtime Web for in-browser model inference
+
+protobufjs
+  License: BSD-3-Clause
+  Repository: https://github.com/protobufjs/protobuf.js
+  Description: Protocol Buffers for JavaScript
+
+@protobufjs/* (aspromise, base64, codegen, eventemitter, fetch, float,
+               inquire, path, pool, utf8)
+  License: BSD-3-Clause
+  Repository: https://github.com/protobufjs/protobuf.js
+  Description: Protobuf.js sub-packages
+
+clipper-lib
+  License: BSL (Boost Software License)
+  Repository: https://github.com/DenerosArmy/clipper-lib
+  Description: Polygon clipping and offsetting library
+
+long
+  License: Apache-2.0
+  Repository: https://github.com/dcodeIO/long.js
+  Description: Long integer arithmetic for JavaScript
+
+flatbuffers
+  License: Apache-2.0
+  Repository: https://github.com/google/flatbuffers
+  Description: FlatBuffers serialization library
+
+detect-libc
+  License: Apache-2.0
+  Repository: https://github.com/lovell/detect-libc
+  Description: Detect the C standard library type
+
+Build/Dev Dependencies (not shipped in the application bundle)
+--------------------------------------------------------------
+
+vite
+  License: MIT
+  Repository: https://github.com/vitejs/vite
+
+rolldown / @rolldown/*
+  License: MIT
+  Repository: https://github.com/rolldown/rolldown
+
+lightningcss
+  License: MPL-2.0
+  Repository: https://github.com/parcel-bundler/lightningcss
+
+postcss
+  License: MIT
+  Repository: https://github.com/postcss/postcss
+
+js-yaml
+  License: MIT
+  Repository: https://github.com/nodeca/js-yaml
+
+License Texts
+-------------
+
+MIT License
+  https://opensource.org/licenses/MIT
+
+Apache License 2.0
+  https://www.apache.org/licenses/LICENSE-2.0
+
+BSD 3-Clause License
+  https://opensource.org/licenses/BSD-3-Clause
+
+Boost Software License (BSL)
+  https://www.boost.org/LICENSE_1_0.txt
+
+Mozilla Public License 2.0 (MPL-2.0)
+  https://www.mozilla.org/en-US/MPL/2.0/
+
+Python License 2.0
+  https://opensource.org/licenses/Python-2.0
