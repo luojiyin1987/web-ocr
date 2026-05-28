@@ -49,7 +49,6 @@ const state = {
   lastDurationMs: null,
   runtimeBlockReason: null,
   initializationSummary: null,
-  webgpuAvailable: null,
 };
 
 let paddleOcrModulePromise = null;
@@ -72,34 +71,13 @@ function setProgress(progress, label) {
   }
 }
 
-async function probeWebGpu() {
-  if (!('gpu' in navigator)) {
-    state.webgpuAvailable = false;
-    return;
-  }
-  try {
-    const adapter = await navigator.gpu.requestAdapter();
-    state.webgpuAvailable = !!adapter;
-  } catch {
-    state.webgpuAvailable = false;
-  }
-}
-
-function hasWebGpu() {
-  return state.webgpuAvailable ?? ('gpu' in navigator);
-}
-
-function formatBackendLabel(backend, webgpuAvailable = hasWebGpu()) {
-  const capability = webgpuAvailable ? t('webgpuReady') : t('wasmFallback');
-  return `${backend} · ${capability}`;
+function formatBackendLabel(backend) {
+  return `${backend} · ${t('wasmRuntime')}`;
 }
 
 function updateRuntimeCards(runtime = null) {
   elements.engineStatus.textContent = 'PP-OCRv5 mobile / ONNX';
-  elements.backendStatus.textContent = formatBackendLabel(
-    elements.backendSelect.value,
-    state.initializationSummary?.webgpuAvailable ?? hasWebGpu(),
-  );
+  elements.backendStatus.textContent = formatBackendLabel(elements.backendSelect.value);
 
   if (runtime) {
     elements.providerStatus.textContent = `${runtime.detProvider} / ${runtime.recProvider}`;
@@ -311,7 +289,7 @@ function buildOrtOptions() {
     backend: elements.backendSelect.value,
     numThreads: Math.max(1, Math.min(4, navigator.hardwareConcurrency || 2)),
     simd: true,
-    wasmPaths: 'https://unpkg.com/onnxruntime-web@1.26.0/dist/',
+    wasmPaths: '/vendor/onnxruntime/',
   };
 }
 
@@ -534,10 +512,6 @@ updateButtons();
 if (!state.runtimeBlockReason) {
   setProgress(0, t('waitingForImage'));
 }
-
-probeWebGpu().then(() => {
-  updateRuntimeCards();
-});
 
 // Language switcher
 document.querySelectorAll('.lang-btn').forEach((btn) => {

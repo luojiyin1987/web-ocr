@@ -38,7 +38,7 @@ const DICT = {
     noscriptTitle: 'Glass OCR',
     noscriptStrong: '隐私优先的浏览器端 OCR 工具。',
     noscriptBody:
-      '图片不上传服务器，文字提取直接在用户浏览器里完成。支持 PP-OCRv5 mobile ONNX 模型，兼容 WebGPU 与 WASM 后端。',
+      '图片不上传服务器，文字提取直接在用户浏览器里完成。支持 PP-OCRv5 mobile ONNX 模型，使用浏览器内 WASM 推理。',
     noscriptWarning: '⚠️ 本工具需要启用 JavaScript 才能运行 OCR 推理。请开启浏览器的 JavaScript 支持后刷新页面。',
     langSwitch: '语言',
     // main.js runtime texts
@@ -58,8 +58,7 @@ const DICT = {
     copyFailed: '复制失败，请手动复制',
     imageLoadFailed: '图片加载失败，请尝试其他图片',
     backendSwitched: '后端已切换，下一次识别会重新初始化',
-    webgpuReady: 'WebGPU ready',
-    wasmFallback: 'WASM fallback',
+    wasmRuntime: 'WASM runtime',
   },
   en: {
     heroTitle: 'Image in, text out. Images never leave your browser.',
@@ -100,7 +99,7 @@ const DICT = {
     noscriptTitle: 'Glass OCR',
     noscriptStrong: 'Privacy-first browser-based OCR tool.',
     noscriptBody:
-      'Images never leave your browser. Text extraction runs locally using PP-OCRv5 mobile ONNX with WebGPU and WASM backends.',
+      'Images never leave your browser. Text extraction runs locally using PP-OCRv5 mobile ONNX with in-browser WASM inference.',
     noscriptWarning:
       '⚠️ This tool requires JavaScript to run OCR inference. Please enable JavaScript in your browser and refresh the page.',
     langSwitch: 'Language',
@@ -121,8 +120,7 @@ const DICT = {
     copyFailed: 'Copy failed, please copy manually',
     imageLoadFailed: 'Image load failed, try another image',
     backendSwitched: 'Backend switched, will reinitialize on next recognition',
-    webgpuReady: 'WebGPU ready',
-    wasmFallback: 'WASM fallback',
+    wasmRuntime: 'WASM runtime',
   },
 };
 

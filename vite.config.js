@@ -1,6 +1,11 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      'onnxruntime-web': 'onnxruntime-web/wasm',
+    },
+  },
   build: {
     rollupOptions: {
       plugins: [
