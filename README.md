@@ -52,6 +52,7 @@ npx wrangler pages deploy dist
 - OCR 在浏览器中运行，图片不上传到你的应用服务端。
 - `public/_headers` 为模型 tar 设置了长缓存，适合 Cloudflare 全球边缘缓存。
 - 头部里启用了 `Cross-Origin-Opener-Policy` 和 `Cross-Origin-Embedder-Policy`，为线程化 WASM 与 WebGPU 运行条件做准备。
+- `public/_headers` 的 CSP 里同时放行了 `'unsafe-eval'` 和 `'wasm-unsafe-eval'`。这是当前 `@techstark/opencv-js` 与 `onnxruntime-web` 浏览器产物的运行要求；如果移除 `'unsafe-eval'`，OCR 初始化会被浏览器 CSP 直接拦截。
 
 ## 外部 CDN 风险与注意事项
 
